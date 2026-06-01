@@ -19,129 +19,148 @@ const UNSUPPORTED_MEDIA_REPLY = "J’ai bien reçu votre fichier. Pour le moment
 const OPENAI_SYSTEM_PROMPT = `Tu es l'assistant WhatsApp de AMI Voyages, une agence de voyages francophone basée en France. Tu aides les clients avec des questions simples sur billets d'avion, bagages, horaires, adresse, visa, paiement, documents, modifications et suivi. Réponds toujours en français, de manière professionnelle, concise, claire et rassurante. N'invente jamais une information inconnue. Si la demande nécessite vérification humaine ou un accès à des données non disponibles, dis qu'un conseiller AMI Voyages prendra le relais.`;
 
 const INTENTS = [
-  {
-    name: 'horaire_vol',
-    priority: 100,
-    tests: [
-      /\ba quelle heure est mon vol\b/i,
-      /\b(?:quelle|quel)\s+est\s+l?\s*horaire\s+de\s+mon\s+vol\b/i,
-      /\bheure de mon vol\b/i,
-      /\bhoraire de mon vol\b/i,
-      /\bhoraire vol\b/i,
-      /\bheure vol\b/i,
-      /\bmon vol est a quelle heure\b/i,
-      /\bc est quoi l heure de mon vol\b/i,
-      /\bje veux l heure de mon vol\b/i,
-      /\bje veux connaitre l heure de mon vol\b/i,
-      /\bmon horaire de vol\b/i
-    ],
-    response: 'Merci d’indiquer votre référence de dossier et votre numéro de téléphone, et un conseiller prendra votre demande dès que possible.'
-  },
-  {
-    name: 'modification_billet',
-    priority: 95,
-    tests: [
-      /\bmodifier mon billet\b/i,
-      /\bchanger mon billet\b/i,
-      /\bmodifier mon vol\b/i,
-      /\bchanger mon vol\b/i,
-      /\bdecaler mon vol\b/i,
-      /\breporter mon vol\b/i,
-      /\bmodifier reservation\b/i,
-      /\bchanger reservation\b/i
-    ],
-    response: 'Merci d’indiquer votre référence de dossier et votre numéro de téléphone, et un conseiller prendra votre demande dès que possible.'
-  },
-  {
-    name: 'annulation_billet',
-    priority: 95,
-    tests: [
-      /\bannuler mon billet\b/i,
-      /\bannuler mon vol\b/i,
-      /\bje veux annuler\b/i,
-      /\bannulation billet\b/i,
-      /\bannulation vol\b/i,
-      /\bje souhaite annuler\b/i
-    ],
-    response: 'Merci d’indiquer votre référence de dossier et votre numéro de téléphone, et un conseiller prendra votre demande dès que possible.'
-  },
-  {
-    name: 'remboursement',
-    priority: 95,
-    tests: [
-      /\bremboursement\b/i,
-      /\betre rembourse\b/i,
-      /\brembourser mon billet\b/i,
-      /\bje veux un remboursement\b/i,
-      /\bcomment etre rembourse\b/i,
-      /\bje souhaite un remboursement\b/i
-    ],
-    response: 'Merci d’indiquer votre référence de dossier et votre numéro de téléphone, et un conseiller prendra votre demande dès que possible.'
-  },
-  {
-    name: 'bagages',
-    priority: 90,
-    tests: [
-      /\bbagage\b/i,
-      /\bbagages\b/i,
-      /\bcombien de bagages\b/i,
-      /\bj ai droit a combien de bagages\b/i,
-      /\bpoids bagage\b/i,
-      /\bfranchise bagage\b/i,
-      /\bcombien de kilo(?:s)? de bagage\b/i
-    ],
-    response: 'Merci d’indiquer votre référence de dossier, votre compagnie aérienne et votre numéro de téléphone, et un conseiller vérifiera votre franchise bagages.'
-  },
-  {
-    name: 'prix_billet',
-    priority: 80,
-    tests: [
-      /\bprix billet\b/i,
-      /\btarif billet\b/i,
-      /\bcombien coute\b/i,
-      /\bprix du vol\b/i,
-      /\bdevis vol\b/i,
-      /\bje veux un devis\b/i,
-      /\bje veux connaitre le prix\b/i,
-      /\bcombien coute le billet\b/i,
-      /\bje veux connaitre le tarif\b/i
-    ],
-    response: 'Pour connaître le meilleur tarif, merci d’indiquer votre destination, votre ville de départ, vos dates, le nombre de passagers et votre numéro de téléphone.'
-  },
-  {
-    name: 'contact_conseiller',
-    priority: 70,
-    tests: [
-      /\bparler a un conseiller\b/i,
-      /\bparler a un agent\b/i,
-      /\bservice client\b/i,
-      /\bcontact humain\b/i,
-      /\bje veux parler a quelqu un\b/i,
-      /\bje souhaite etre rappele\b/i,
-      /\bje veux parler a une personne\b/i
-    ],
-    response: 'Merci de nous indiquer votre demande ainsi que votre numéro de téléphone, et un conseiller vous répondra dès que possible.'
-  },
-  {
-    name: 'horaires_agence',
-    priority: 30,
-    tests: [
-      /\bquels sont vos horaires\b/i,
-      /\bquels sont les horaires\b/i,
-      /\bhoraires agence\b/i,
-      /\bhoraire agence\b/i,
-      /\bheure ouverture\b/i,
-      /\bheures d ouverture\b/i,
-      /\bquand ouvrez vous\b/i,
-      /\bvous ouvrez quand\b/i,
-      /\bhoraire d ouverture\b/i,
-      /\badresse et horaires\b/i,
-      /\bquelle est votre adresse\b/i,
-      /\bou se trouve l agence\b/i,
-      /\bou est votre agence\b/i
-    ],
-    response: 'Bonjour, nos horaires sont les suivants :\nAMI Voyages Paris Gare du Nord, 157 rue Lafayette, 75010 Paris : du lundi au samedi de 10h00 à 18h30.\nAMI Voyages Aubervilliers Quatre Chemins, 100 avenue de la République, 93300 Aubervilliers : du mardi au vendredi de 10h00 à 18h30.\nVous pouvez aussi nous écrire ici sur WhatsApp.'
-  }
+    {
+        name: 'horaire_vol',
+        priority: 100,
+        tests: [
+            /\ba quelle heure est mon vol\b/i,
+            /\bmon vol est a quelle heure\b/i,
+            /\bmon vol est a quel heure\b/i,
+            /\bheure de mon vol\b/i,
+            /\bhoraire de mon vol\b/i,
+            /\bhoraire vol\b/i,
+            /\bheure vol\b/i,
+            /\bc est quoi l heure de mon vol\b/i,
+            /\bje veux l heure de mon vol\b/i,
+            /\bje veux connaitre l heure de mon vol\b/i,
+            /\bquel est l horaire de mon vol\b/i,
+            /\bmon horaire de vol\b/i
+        ],
+        response: 'Merci d’indiquer votre référence de dossier et votre numéro de téléphone, et un conseiller prendra votre demande dès que possible.'
+    },
+    {
+        name: 'modification_billet',
+        priority: 95,
+        tests: [
+            /\bmodifier mon billet\b/i,
+            /\bchanger mon billet\b/i,
+            /\bmodifier mon vol\b/i,
+            /\bchanger mon vol\b/i,
+            /\bdecaler mon vol\b/i,
+            /\breporter mon vol\b/i,
+            /\bmodifier reservation\b/i,
+            /\bchanger reservation\b/i
+        ],
+        response: 'Merci d’indiquer votre référence de dossier et votre numéro de téléphone, et un conseiller prendra votre demande dès que possible.'
+    },
+    {
+        name: 'annulation_billet',
+        priority: 95,
+        tests: [
+            /\bannuler mon billet\b/i,
+            /\bannuler mon vol\b/i,
+            /\bje veux annuler\b/i,
+            /\bje souhaite annuler\b/i,
+            /\bannulation billet\b/i,
+            /\bannulation vol\b/i
+        ],
+        response: 'Merci d’indiquer votre référence de dossier et votre numéro de téléphone, et un conseiller prendra votre demande dès que possible.'
+    },
+    {
+        name: 'remboursement',
+        priority: 95,
+        tests: [
+            /\bremboursement\b/i,
+            /\betre rembourse\b/i,
+            /\brembourser mon billet\b/i,
+            /\bje veux un remboursement\b/i,
+            /\bje souhaite un remboursement\b/i,
+            /\bcomment etre rembourse\b/i
+        ],
+        response: 'Merci d’indiquer votre référence de dossier et votre numéro de téléphone, et un conseiller prendra votre demande dès que possible.'
+    },
+    {
+        name: 'bagages',
+        priority: 90,
+        tests: [
+            /\bbagage\b/i,
+            /\bbagages\b/i,
+            /\bcombien de bagages\b/i,
+            /\bj ai droit a combien de bagages\b/i,
+            /\bpoids bagage\b/i,
+            /\bfranchise bagage\b/i,
+            /\bcombien de kilo(?:s)? de bagage\b/i
+        ],
+        response: 'Merci d’indiquer votre référence de dossier, votre compagnie aérienne et votre numéro de téléphone, et un conseiller vérifiera votre franchise bagages.'
+    },
+    {
+        name: 'prix_billet',
+        priority: 80,
+        tests: [
+            /\bprix billet\b/i,
+            /\btarif billet\b/i,
+            /\bcombien coute\b/i,
+            /\bprix du vol\b/i,
+            /\bdevis vol\b/i,
+            /\bje veux un devis\b/i,
+            /\bje veux connaitre le prix\b/i,
+            /\bje veux connaitre le tarif\b/i,
+            /\bcombien coute le billet\b/i,
+            /\bje veux prendre un billet\b/i,
+            /\bje veux acheter un billet\b/i
+        ],
+        response: 'Pour connaître le meilleur tarif, merci d’indiquer votre destination, votre ville de départ, vos dates, le nombre de passagers et votre numéro de téléphone.'
+    },
+    {
+        name: 'destination',
+        priority: 75,
+        tests: [
+            /\bje veux partir au bangladesh\b/i,
+            /\bvols? jusqu au bangladesh\b/i,
+            /\bvous faites les vols jusqu au bangladesh\b/i,
+            /\bdestination bangladesh\b/i,
+            /\bpartir au bangladesh\b/i,
+            /\bvol pour le bangladesh\b/i,
+            /\bbangladesh\b/i
+        ],
+        response: 'Oui, nous proposons des billets vers le Bangladesh. Merci de nous indiquer votre ville de départ, vos dates de voyage, le nombre de passagers et votre numéro de téléphone afin qu’un conseiller vous communique le meilleur tarif.'
+    },
+    {
+        name: 'contact_conseiller',
+        priority: 70,
+        tests: [
+            /\bparler a un conseiller\b/i,
+            /\bparler a un agent\b/i,
+            /\bservice client\b/i,
+            /\bcontact humain\b/i,
+            /\bje veux parler a quelqu un\b/i,
+            /\bje veux parler a une personne\b/i,
+            /\bje souhaite etre rappele\b/i
+        ],
+        response: 'Merci de nous indiquer votre demande ainsi que votre numéro de téléphone, et un conseiller vous répondra dès que possible.'
+    },
+    {
+        name: 'horaires_agence',
+        priority: 30,
+        tests: [
+            /\bquels sont vos horaires\b/i,
+            /\bquels sont les horaires\b/i,
+            /\bc est quand vos horaires\b/i,
+            /\bcest quand vos horaires\b/i,
+            /\bhoraires agence\b/i,
+            /\bhoraire agence\b/i,
+            /\bheure ouverture\b/i,
+            /\bheures d ouverture\b/i,
+            /\bquand ouvrez vous\b/i,
+            /\bvous ouvrez quand\b/i,
+            /\bhoraire d ouverture\b/i,
+            /\badresse et horaires\b/i,
+            /\bquelle est votre adresse\b/i,
+            /\bou se trouve l agence\b/i,
+            /\bou est votre agence\b/i
+        ],
+        response: 'Bonjour, nos horaires sont les suivants :\nAMI Voyages Paris Gare du Nord, 157 rue Lafayette, 75010 Paris : du lundi au samedi de 10h00 à 18h30.\nAMI Voyages Aubervilliers Quatre Chemins, 100 avenue de la République, 93300 Aubervilliers : du mardi au vendredi de 10h00 à 18h30.\nVous pouvez aussi nous écrire ici sur WhatsApp.'
+    }
 ].sort((a, b) => b.priority - a.priority);
 
 function normalizeText(text) {
