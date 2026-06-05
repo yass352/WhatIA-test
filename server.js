@@ -117,7 +117,7 @@ function detectIntent(message = '') {
 
 async function generateTravelReply(messageText, sender) {
   const safeText = String(messageText || '').trim();
-  if (!safeText) return "Je peux vous aider pour les demandes simples. Pour cette demande, un conseiller AMI Voyages va vous répondre.";
+  if (!safeText) return "Pouvez-vous me préciser votre demande ? Un agent AMI Voyages prendra ensuite le relais.";
 
   if (sender) {
     const session = getSession(sender);
