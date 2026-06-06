@@ -87,7 +87,7 @@ const INTENTS = [
     name: 'salutation', priority: 40, handoff: false, tests: [/\bbonjour\b/i, /\bsalut\b/i, /\bbjr\b/i, /\bhi\b/i, /\bhello\b/i, /\bslt\b/i],
     response: 'Bonjour, bienvenue chez AMI Voyages.\nNous sommes une agence de voyages spécialisée dans les vols en direction de l’Asie du Sud et de l’Afrique subsaharienne.\nEn quoi puis-je vous aider ?\nSi vous souhaitez connaître les tarifs, merci de nous indiquer :\nvotre destination,\nvotre ville de départ et votre ville de retour,\nvos dates de départ et de retour,\nle nombre de passagers,\nvotre préférence éventuelle : compagnie aérienne, vol direct ou prix le plus bas.\nUn agent vous indiquera le meilleur prix actuel.'
   }, {
-    name: 'salam', priority: 40, handoff: false, tests: [/\bsalam\b/i, /\bsalam aleykoum\b/i, /\bsalamalaikoum\b/i, /\bsalamualaikoum\b/i,/\bAs-Salamu'alaikum\b/i, /\bSalam alaikum\b/i, /\bAssalamulaikum\b/i, /\bASalamu aleykum\b/i, /\bSlm\b/i], response: 'Assalamualaikum, bienvenue chez AMI Voyages.\nNous sommes une agence de voyages spécialisée dans les vols en direction de l’Asie du Sud et de l’Afrique subsaharienne.\nEn quoi puis-je vous aider ?\nSi vous souhaitez connaître les tarifs, merci de nous indiquer :\nvotre destination,\nvotre ville de départ et votre ville de retour,\nvos dates de départ et de retour,\nle nombre de passagers,\nvotre préférence éventuelle : compagnie aérienne, vol direct ou prix le plus bas.\nUn agent vous indiquera le meilleur prix actuel.'
+    name: 'salam', priority: 40, handoff: false, tests: [/\bsalam\b/i, /\bsalam aleykoum\b/i, /\bsalamalaikoum\b/i, /\bsalamualaikoum\b/i,/\bAs-Salamu'alaikum\b/i, /\bSalam alaikum\b/i, /\bAssalamulaikum\b/i, /\bASalamu aleykum\b/i, /\bSlm\b/i], response: 'Walaikum assalam, bienvenue chez AMI Voyages.\nNous sommes une agence de voyages spécialisée dans les vols en direction de l’Asie du Sud et de l’Afrique subsaharienne.\nEn quoi puis-je vous aider ?\nSi vous souhaitez connaître les tarifs, merci de nous indiquer :\nvotre destination,\nvotre ville de départ et votre ville de retour,\nvos dates de départ et de retour,\nle nombre de passagers,\nvotre préférence éventuelle : compagnie aérienne, vol direct ou prix le plus bas.\nUn agent vous indiquera le meilleur prix actuel.'
   },
 
 ].sort((a, b) => b.priority - a.priority);
@@ -100,6 +100,30 @@ function normalizeText(text) {
     .replace(/[^\w\s]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+function parseLeadingGreeting(text = '') {
+  const normalized = normalizeText(text);
+  const patterns = [
+    { prefix: 'Bonjour', regex: /^(?:bonjour|salut|bjr|hi|hello|slt)\b[\s,]*(.*)$/ },
+    { prefix: 'Walaikum assalam', regex: /^(?:salam(?:\s+aleykoum|\s+alaikum)?|salamalaikoum|salamualaikoum|as\s*salamu(?:\s+aleykoum|\s+alaikum|\s+alaykum)?|assalamulaikum|asalamu\s+aleykum|asalamu\s+alaykum|slm)\b[\s,]*(.*)$/ }
+  ];
+  for (const { prefix, regex } of patterns) {
+    const match = normalized.match(regex);
+    if (match) {
+      const rest = String(match[1] || '').trim();
+      return { greeting: prefix, rest, isOnlyGreeting: rest.length === 0 };
+    }
+  }
+  return { greeting: null, rest: String(text || '').trim(), isOnlyGreeting: false };
+}
+
+function prefixResponse(greeting, response) {
+  if (!greeting) return String(response || '');
+  const trimmed = String(response || '').trim();
+  if (!trimmed) return trimmed;
+  if (trimmed.toLowerCase().startsWith(greeting.toLowerCase())) return trimmed;
+  return `${greeting}, ${trimmed}`;
 }
 
 function extractTravelDestination(text = '') {
@@ -138,29 +162,37 @@ async function generateTravelReply(messageText, sender) {
   const safeText = String(messageText || '').trim();
   if (!safeText) return "Pouvez-vous me préciser votre demande ? Un agent AMI Voyages prendra ensuite le relais.";
 
+  const { greeting, rest, isOnlyGreeting } = parseLeadingGreeting(safeText);
+  const cleanText = rest || safeText;
+
+  if (isOnlyGreeting) {
+    const intent = detectIntent(cleanText);
+    return intent ? intent.response : prefixResponse(greeting, "Pouvez-vous me préciser votre demande ? Un agent AMI Voyages prendra ensuite le relais.");
+  }
+
   if (sender) {
     const session = getSession(sender);
-    if (session.awaitingContact && looksLikeContactInfo(safeText)) {
+    if (session.awaitingContact && looksLikeContactInfo(cleanText)) {
       clearSession(sender);
       return HANDOFF_ACK;
     }
   }
 
-  const intent = detectIntent(safeText);
+  const intent = detectIntent(cleanText);
   if (intent) {
     if (intent.name === 'projet_voyage') {
-      const destination = extractTravelDestination(safeText);
+      const destination = extractTravelDestination(cleanText);
       if (destination) {
-        return `Super, nous pouvons vous aider à organiser votre voyage vers ${destination}. Merci de nous indiquer votre ville de départ, vos dates de départ et de retour, et le nombre de passagers. Un conseiller AMI Voyages prendra ensuite le relais.`;
+        return prefixResponse(greeting, `Super, nous pouvons vous aider à organiser votre voyage vers ${destination}. Merci de nous indiquer votre ville de départ, vos dates de départ et de retour, et le nombre de passagers. Un conseiller AMI Voyages prendra ensuite le relais.`);
       }
     }
     if (intent.handoff && sender) {
       saveSession(sender, { awaitingContact: true, intent: intent.name, timestamp: Date.now() });
     }
-    return intent.response;
+    return prefixResponse(greeting, intent.response);
   }
 
-  return "Pouvez-vous me préciser votre demande ? Un agent AMI Voyages prendra ensuite le relais.";
+  return prefixResponse(greeting, "Pouvez-vous me préciser votre demande ? Un agent AMI Voyages prendra ensuite le relais.");
 }
 
 async function handleTextMessage(text, sender) {
