@@ -73,12 +73,13 @@ const INTENTS = [
   { name: 'bebe_bagage', priority: 92, handoff: true, tests: [/\bbebe\s+bagage\b/i, /\bbagage\s+pour\s+bebe\b/i, /\bbagage\s+de\s+bebe\b/i], response: 'Oui, en général, ils ont droit à des bagages.\nCela dépend de la compagnie aérienne.\nSauf chez Saudia Airlines, où c’est 23 kilos.' },
   { name: 'enfant_bagage', priority: 92, handoff: true, tests: [/\benfant\s+bagage\b/i, /\bbagage\s+enfant\b/i, /\bbagage\s+pour\s+enfant\b/i], response: 'Les bagages pour les enfants suivent généralement les mêmes normes que pour les adultes mais cela peut dépendre de la compagnie aérienne.' },
   { name: 'rappel_client', priority: 91, handoff: true, tests: [/\bpouvez[- ]?vous\s+me\s+rappeler\b/i, /\bme\s+rappeler\b/i, /\bdemande\s+de\s+rappel\b/i], response: 'Oui, nous pouvons transmettre votre demande à un conseiller.\nMerci d’indiquer votre nom et le sujet de votre demande. Un conseiller AMI Voyages prendra le relais.' },
-  { name: 'horaires_ouverture', priority: 80, handoff: false, tests: [/\bhoraire\s+ouverture\b/i, /\bhoraires?\b.*\bouverture\b/i, /\bquels\s+sont\s+vos\s+horaires\b/i], response: 'Bonjour, nos horaires sont les suivants :\nAMI Voyages Paris Gare du Nord, 157 rue Lafayette, 75010 Paris ouvert du lundi au samedi de 10h00 à 18h30.\nAMI Voyages Aubervilliers Quatre Chemins, 100 avenue de la République, 93300 Aubervilliers ouvert du mardi au vendredi de 10h00 à 18h30.\nVous pouvez aussi nous écrire ici sur WhatsApp.' },
+  { name: 'projet_voyage', priority: 79, handoff: true, tests: [/\bje\s+veux\s+(?:aller|voyager|partir)\b/i, /\bje\s+cherche\b.*\b(?:vol|voyage|billet)\b/i, /\bbillet\s+pour\b/i, /\bpartir\s+(?:pour|en|a|au|aux|vers)\b/i, /\bvoyager\s+(?:pour|en|a|au|aux|vers)\b/i], response: 'Nous pouvons vous aider à organiser votre voyage. Merci de nous indiquer votre destination, votre ville de départ, vos dates de départ et de retour, et le nombre de passagers. Un conseiller AMI Voyages prendra ensuite le relais.' },
+  { name: 'horaires_ouverture', priority: 80, handoff: false, tests: [/\bhoraire\s+ouverture\b/i, /\bhoraires?\b.*\bouverture\b/i, /\bquels\s+sont\s+vos\s+horaires\b/i, /\bvous\s+etes\s+ouvert\b/i, /\bvous\s+etes\s+ouvert\s+quand\b/i, /\bcest\s+ouvert\b/i, /\bouvrez\s+quand\b/i, /\bfermez\s+a\s+quelle\s+heure\b/i, /\btravaillez\s+aujourd hui\b/i, /\bvous\s+etes\s+la\b/i], response: 'Bonjour, nos horaires sont les suivants :\nAMI Voyages Paris Gare du Nord, 157 rue Lafayette, 75010 Paris ouvert du lundi au samedi de 10h00 à 18h30.\nAMI Voyages Aubervilliers Quatre Chemins, 100 avenue de la République, 93300 Aubervilliers ouvert du mardi au vendredi de 10h00 à 18h30.\nVous pouvez aussi nous écrire ici sur WhatsApp.' },
   { name: 'localisation_agences', priority: 75, handoff: false, tests: [/\blocalisation\b.*\bagence\b/i, /\badresse\b.*\bagence\b/i, /\bagence[s]?\b.*\bParis\b/i, /\bAubervilliers\b/i], response: 'Bonjour, voici nos agences :\nAMI Voyages Paris Gare du Nord, 157 rue Lafayette, 75010 Paris ouvert du lundi au samedi de 10h00 à 18h30.\nAMI Voyages Aubervilliers Quatre Chemins, 100 avenue de la République, 93300 Aubervilliers ouvert du mardi au vendredi de 10h00 à 18h30.\nVous pouvez aussi nous écrire ici sur WhatsApp.' },
   { name: 'destination_couverte', priority: 70, handoff: false, tests: [/\bbangladesh\b/i, /\binde\b/i, /\bSri\s+Lanka\b/i, /\bMali\b/i, /\bS[eé]n[eé]gal\b/i, /\bGuin[eé]e\b/i, /\bRDC\b/i, ], response: 'Oui, nous travaillons sur cette destination.\nMerci de nous indiquer :\nvotre ville de départ et votre ville de retour,\nvos dates de départ et de retour,\nle nombre de passagers,\nvotre préférence éventuelle : compagnie aérienne, vol direct ou prix le plus bas.\nUn agent vous indiquera le meilleur prix actuel.' },
   { name: 'promos', priority: 65, handoff: false, tests: [/\bpromo[s]?\b/i, /\boffre[s]?\s+special/i, /\bFrance\b.*\bLisbonne\b.*\bDhaka\b/i, /\bLisbonne[- ]Dhaka\b/i], response: 'Oui, nous pouvons proposer des tarifs avantageux au départ de la France avec retour en France, ainsi que sur Lisbonne-Dhaka.\nNous pouvons également traiter d’autres destinations.\nLes meilleurs tarifs sont en général hors vacances et hors week-end.\nSi vous souhaitez connaître les tarifs, merci de nous indiquer :\nvotre destination,\nvotre ville de départ et votre ville de retour,\nvos dates de départ et de retour,\nle nombre de passagers,\nvotre préférence éventuelle : compagnie aérienne, vol direct ou prix le plus bas.\nUn agent vous indiquera le meilleur prix actuel.' },
   { name: 'bus', priority: 64, handoff: false, tests: [/\bfaites[- ]?vous.*bus\b/i, /\bbus\b/i, /\btrain\b/i], response: 'Non, nous proposons uniquement des voyages aériens.\nNotre agence est spécialisée dans les destinations d’Asie du Sud, comme le Bangladesh, l’Inde et le Sri Lanka, ainsi que d’Afrique subsaharienne, comme le Mali, le Sénégal, la Guinée ou la RDC.' },
-  { name: 'appel_non_repondu', priority: 60, handoff: false, tests: [/\bvous\s+ne\s+repondez\s+pas\b/i, /\bje\s+n'?arrive\s+pas\s+a\s+vous\s+joindre\b/i, /\blignes?\s+sont\s+occupe(?:es)?\b/i], response: 'Nous faisons de notre mieux pour répondre à tous les appels.\nSi nos lignes sont occupées, vous pouvez nous écrire ici sur WhatsApp et nous traiterons votre demande dès que possible.' },
+  { name: 'appel_non_repondu', priority: 60, handoff: false, tests: [/\bvous\s+ne\s+repondez\s+pas\b/i, /\bje\s+n'?arrive\s+pas\s+a\s+vous\s+joindre\b/i, /\blignes?\s+sont\s+occupe(?:es)?\b/i, /\bje\s+vous\s+ai\s+appele\b/i, /\bvous\s+m'?avez\s+pas\s+repondu\b/i, /\bappel\s+manque\b/i, /\bpersonne\s+ne\s+repond\b/i, /\bjai\s+appele\b/i, /\bje\s+vous\s+appelle\s+depuis\s+ce\s+matin\b/i], response: 'Nous sommes désolés si vous n’avez pas reçu de réponse rapide.\nPouvez-vous nous préciser votre demande ou nous laisser votre numéro ? Un conseiller AMI Voyages reviendra vers vous dès que possible.' },
   { name: 'agent_disponible', priority: 58, handoff: false, tests: [/\bagent\s+disponible\b/i, /\bconseiller\s+disponible\b/i, /\best\s+quelqu'un\s+disponible\b/i], response: 'Tous nos agents sont disponibles selon leur planning. Nous faisons de notre mieux pour répondre dans les meilleurs délais pendant les horaires d’ouverture.\nEn dehors de ces horaires, vous pouvez déjà nous laisser votre demande ici sur WhatsApp.' },
   { name: 'delai_reponse', priority: 55, handoff: false, tests: [/\bdelai\s+de\s+reponse\b/i, /\bcombien\s+de\s+temps\s+pour\s+repondre\b/i, /\ben\s+combien\s+de\s+temps\b/i], response: 'Nous faisons de notre mieux pour répondre dans les meilleurs délais pendant les horaires d’ouverture.\nEn dehors de ces horaires, vous pouvez déjà nous laisser votre demande ici sur WhatsApp.' },
   { name: 'duree_minimum', priority: 50, handoff: false, tests: [/\bduree\s+minimum\b/i, /\bminimum\s+de\s+jours\b/i, /\bsejour\s+minimum\b/i], response: 'En Asie, c’est généralement 5 à 7 jours.\nEn Afrique, c’est généralement 3 jours, selon la compagnie aérienne.' },
@@ -86,7 +87,7 @@ const INTENTS = [
     name: 'salutation', priority: 40, handoff: false, tests: [/\bbonjour\b/i, /\bsalut\b/i, /\bbjr\b/i, /\bhi\b/i, /\bhello\b/i, /\bslt\b/i],
     response: 'Bonjour, bienvenue chez AMI Voyages.\nNous sommes une agence de voyages spécialisée dans les vols en direction de l’Asie du Sud et de l’Afrique subsaharienne.\nEn quoi puis-je vous aider ?\nSi vous souhaitez connaître les tarifs, merci de nous indiquer :\nvotre destination,\nvotre ville de départ et votre ville de retour,\nvos dates de départ et de retour,\nle nombre de passagers,\nvotre préférence éventuelle : compagnie aérienne, vol direct ou prix le plus bas.\nUn agent vous indiquera le meilleur prix actuel.'
   }, {
-    name: 'salutation', priority: 40, handoff: false, tests: [/\bsalam\b/i, /\bsalam aleykoum\b/i, /\bsalamalaikoum\b/i, /\bsalamualaikoum\b/i,/\bAs-Salamu'alaikum\b/i, /\bSalam alaikum\b/i, /\bAssalamulaikum\b/i, /\bASalamu aleykum\b/i, /\bSlm\b/i], response: 'Assalamualaikum, bienvenue chez AMI Voyages.\nNous sommes une agence de voyages spécialisée dans les vols en direction de l’Asie du Sud et de l’Afrique subsaharienne.\nEn quoi puis-je vous aider ?\nSi vous souhaitez connaître les tarifs, merci de nous indiquer :\nvotre destination,\nvotre ville de départ et votre ville de retour,\nvos dates de départ et de retour,\nle nombre de passagers,\nvotre préférence éventuelle : compagnie aérienne, vol direct ou prix le plus bas.\nUn agent vous indiquera le meilleur prix actuel.'
+    name: 'salam', priority: 40, handoff: false, tests: [/\bsalam\b/i, /\bsalam aleykoum\b/i, /\bsalamalaikoum\b/i, /\bsalamualaikoum\b/i,/\bAs-Salamu'alaikum\b/i, /\bSalam alaikum\b/i, /\bAssalamulaikum\b/i, /\bASalamu aleykum\b/i, /\bSlm\b/i], response: 'Assalamualaikum, bienvenue chez AMI Voyages.\nNous sommes une agence de voyages spécialisée dans les vols en direction de l’Asie du Sud et de l’Afrique subsaharienne.\nEn quoi puis-je vous aider ?\nSi vous souhaitez connaître les tarifs, merci de nous indiquer :\nvotre destination,\nvotre ville de départ et votre ville de retour,\nvos dates de départ et de retour,\nle nombre de passagers,\nvotre préférence éventuelle : compagnie aérienne, vol direct ou prix le plus bas.\nUn agent vous indiquera le meilleur prix actuel.'
   },
 
 ].sort((a, b) => b.priority - a.priority);
@@ -99,6 +100,24 @@ function normalizeText(text) {
     .replace(/[^\w\s]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+function extractTravelDestination(text = '') {
+  const normalized = normalizeText(text);
+  const patterns = [
+    /\b(?:je\s+veux\s+(?:aller|voyager|partir)\s+(?:en|a|au|aux|vers|pour)\s+([a-z][a-z\s]{1,60}))/,
+    /\b(?:je\s+cherche\s+(?:un\s+vol\s+)?(?:pour|en|a|au|aux|vers)\s+([a-z][a-z\s]{1,60}))/,
+    /\b(?:billet\s+pour\s+([a-z][a-z\s]{1,60}))/,
+    /\b(?:partir\s+(?:pour|en|a|au|aux|vers)\s+([a-z][a-z\s]{1,60}))/,
+    /\b(?:voyager\s+(?:pour|en|a|au|aux|vers)\s+([a-z][a-z\s]{1,60}))/
+  ];
+  for (const pattern of patterns) {
+    const match = normalized.match(pattern);
+    if (match && match[1]) {
+      return match[1].trim();
+    }
+  }
+  return '';
 }
 
 function detectIntent(message = '') {
@@ -129,6 +148,12 @@ async function generateTravelReply(messageText, sender) {
 
   const intent = detectIntent(safeText);
   if (intent) {
+    if (intent.name === 'projet_voyage') {
+      const destination = extractTravelDestination(safeText);
+      if (destination) {
+        return `Super, nous pouvons vous aider à organiser votre voyage vers ${destination}. Merci de nous indiquer votre ville de départ, vos dates de départ et de retour, et le nombre de passagers. Un conseiller AMI Voyages prendra ensuite le relais.`;
+      }
+    }
     if (intent.handoff && sender) {
       saveSession(sender, { awaitingContact: true, intent: intent.name, timestamp: Date.now() });
     }
