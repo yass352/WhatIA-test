@@ -135,7 +135,7 @@ async function generateTravelReply(messageText, sender) {
     return intent.response;
   }
 
-  return "Je n’ai pas assez d’informations pour vous répondre précisément ici. Un agent AMI Voyages prendra le relais pour vous répondre.";
+  return "Pouvez-vous me préciser votre demande ? Un agent AMI Voyages prendra ensuite le relais.";
 }
 
 async function handleTextMessage(text, sender) {
