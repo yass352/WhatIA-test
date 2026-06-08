@@ -29,6 +29,31 @@ function clearSession(user) {
   SESSIONS.delete(user);
 }
 
+// Simple in-memory store to prevent processing duplicate webhook messages
+const PROCESSED_MESSAGES = new Map(); // messageId -> timestamp
+
+function isMessageProcessed(id, windowMs = 5 * 60 * 1000) {
+  if (!id) return false;
+  const t = PROCESSED_MESSAGES.get(id);
+  if (!t) return false;
+  if (Date.now() - t < windowMs) return true;
+  PROCESSED_MESSAGES.delete(id);
+  return false;
+}
+
+function markMessageProcessed(id) {
+  if (!id) return;
+  PROCESSED_MESSAGES.set(id, Date.now());
+}
+
+// Periodic cleanup to avoid unbounded memory growth
+setInterval(() => {
+  const now = Date.now();
+  for (const [id, ts] of PROCESSED_MESSAGES) {
+    if (now - ts > 15 * 60 * 1000) PROCESSED_MESSAGES.delete(id);
+  }
+}, 10 * 60 * 1000);
+
 function isPhoneNumber(text) {
   if (!text) return false;
   const digits = String(text).replace(/\D/g, '');
@@ -303,6 +328,13 @@ app.post('/webhook', async (req, res) => {
     }
 
     const message = messages[0];
+    const messageId = message?.id || message?.message?.id || message?.message_id || null;
+    if (messageId && isMessageProcessed(messageId)) {
+      console.log('[WEBHOOK] duplicate message ignored', messageId);
+      return res.status(200).send('Duplicate message ignored');
+    }
+    // mark early to avoid race conditions (will be cleaned up by interval)
+    markMessageProcessed(messageId);
     const sender = message.from;
     let replyText = '';
 
