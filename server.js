@@ -111,12 +111,54 @@ const INTENTS = [
   { name: 'au_revoir', priority: 41, handoff: false, tests: [/\bau\s+revoir\b/i, /\ba\s+bientot\b/i, /\bbye\b/i, /\bbonne\s+journee\b/i, /\bbonne\s+soiree\b/i, /\ba\s+plus\b/i, /\bon\s+se\s+recontacte\b/i], response: 'Merci pour votre message. À bientôt chez AMI Voyages.' },
   { name: 'demande_humain', priority: 90, handoff: true, tests: [/\bje\s+veux\s+parler\s+a\s+un\s+agent\b/i, /\bje\s+veux\s+parler\s+a\s+un\s+conseiller\b/i, /\bje\s+veux\s+parler\s+a\s+quelqu[’']un\b/i, /\bun\s+agent\b/i, /\bun\s+conseiller\b/i, /\bhumain\b/i, /\bservice\s+client\b/i, /\bappelez[- ]?moi\b/i, /\bpouvez[- ]?vous\s+me\s+rappeler\b/i], response: 'Bien sûr. Merci de nous indiquer votre nom, votre numéro de téléphone et l’objet de votre demande. Un conseiller AMI Voyages prendra ensuite le relais.' },
   { name: 'remerciement', priority: 42, handoff: false, tests: [/\bmerci\b/i, /\bmerci\s+beaucoup\b/i, /\bmerc[iî]e?\s+a\s+vous\b/i, /\bok\s+merci\b/i, /\bdaccord\s+merci\b/i, /\bgrand\s+merci\b/i, /\bmercii+\b/i], response: 'Avec plaisir. Je reste à votre disposition pour votre voyage.' },
-  { name: 'politesse_ca_va', priority: 41, handoff: false, tests: [/\bca\s+va\b/i, /\bcomment\s+ca\s+va\b/i, /\btu\s+vas\s+bien\b/i, /\bvous\s+allez\s+bien\b/i, /\bcomment\s+vas[- ]?tu\b/i, /\bcomment\s+allez[- ]?vous\b/i, /\bsa\s+va\b/i], response: 'Oui, ça va très bien, et vous ? Bienvenue chez AMI Voyages.\nNous sommes une agence de voyages spécialisée dans les vols en direction de l’Asie du Sud et de l’Afrique subsaharienne.\nEn quoi puis-je vous aider ?\nSi vous souhaitez connaître les tarifs, merci de nous indiquer :\nvotre destination,\nvotre ville de départ et votre ville de retour,\nvos dates de départ et de retour,\nle nombre de passagers,\nvotre préférence éventuelle : compagnie aérienne, vol direct ou prix le plus bas.\nUn agent vous indiquera le meilleur prix actuel.' },
+  {
+    name: 'politesse_ca_va',
+    priority: 41,
+    handoff: false,
+    tests: [
+      /\b(?:ca\s+va|sa\s+va|sava)\b/i,
+      /\b(?:ca|sa)\s+roule\b/i,
+      /\bca\s+baigne\b/i,
+      /\bca\s+gaze\b/i,
+      /\bcomment\s+(?:ca\s+va|sa\s+va|sava)\b/i,
+      /\btu\s+va(?:s)?\s+bien\b/i,
+      /\bvous\s+allez\s+bien\b/i,
+      /\bcomment\s+va(?:s)?[- ]?tu\b/i,
+      /\bcomment\s+tu\s+va(?:s)?\b/i,
+      /\bcomment\s+allez[- ]?vous\b/i,
+      /\bcomment\s+vous\s+allez\b/i,
+      /\btu\s+te\s+sens\s+bien\b/i,
+      /\bvous\s+vous\s+sentez\s+bien\b/i,
+      /\bcomment\s+tu\s+te\s+sens\b/i,
+      /\bcomment\s+vous\s+vous\s+sentez\b/i,
+      /\bbien\s+ou\s+bien\b/i
+    ],
+    response: 'Oui, ça va très bien, et vous ? Bienvenue chez AMI Voyages.\nNous sommes une agence de voyages spécialisée dans les vols en direction de l’Asie du Sud et de l’Afrique subsaharienne.\nEn quoi puis-je vous aider ?\nSi vous souhaitez connaître les tarifs, merci de nous indiquer :\nvotre destination,\nvotre ville de départ et votre ville de retour,\nvos dates de départ et de retour,\nle nombre de passagers,\nvotre préférence éventuelle : compagnie aérienne, vol direct ou prix le plus bas.\nUn agent vous indiquera le meilleur prix actuel.'
+  },
   {
     name: 'salutation', priority: 40, handoff: false, tests: [/\bbonjour\b/i, /\bsalut\b/i, /\bbjr\b/i, /\bhi\b/i, /\bhello\b/i, /\bslt\b/i],
     response: 'Bonjour, bienvenue chez AMI Voyages.\nNous sommes une agence de voyages spécialisée dans les vols en direction de l’Asie du Sud et de l’Afrique subsaharienne.\nEn quoi puis-je vous aider ?\nSi vous souhaitez connaître les tarifs, merci de nous indiquer :\nvotre destination,\nvotre ville de départ et votre ville de retour,\nvos dates de départ et de retour,\nle nombre de passagers,\nvotre préférence éventuelle : compagnie aérienne, vol direct ou prix le plus bas.\nUn agent vous indiquera le meilleur prix actuel.'
   }, {
-    name: 'salam', priority: 40, handoff: false, tests: [/\bsalam\b/i, /\bsalam aleykoum\b/i, /\bsalamalaikoum\b/i, /\bsalamualaikoum\b/i, /\bAs-Salamu'alaikum\b/i, /\bSalam alaikum\b/i, /\bAssalamulaikum\b/i, /\bASalamu aleykum\b/i, /\bSlm\b/i], response: 'Walaikum assalam, bienvenue chez AMI Voyages.\nNous sommes une agence de voyages spécialisée dans les vols en direction de l’Asie du Sud et de l’Afrique subsaharienne.\nEn quoi puis-je vous aider ?\nSi vous souhaitez connaître les tarifs, merci de nous indiquer :\nvotre destination,\nvotre ville de départ et votre ville de retour,\nvos dates de départ et de retour,\nle nombre de passagers,\nvotre préférence éventuelle : compagnie aérienne, vol direct ou prix le plus bas.\nUn agent vous indiquera le meilleur prix actuel.'
+    name: 'salam',
+    priority: 40,
+    handoff: false,
+    tests: [
+      /\bslm\b/i,
+      /\bsalam\b/i,
+      /\bas\s+salam\s+alaik(?:oum|um)\b/i,
+      /\bas\s+salam\s+aleyk(?:oum|um)\b/i,
+      /\bas\s+salam\s+alayk(?:oum|um)\b/i,
+      /\bassalam(?:u)?\s+alaik(?:oum|um)\b/i,
+      /\bassalam(?:u)?\s+aleyk(?:oum|um)\b/i,
+      /\bassalam(?:u)?\s+alayk(?:oum|um)\b/i,
+      /\bsalam\s+alaik(?:oum|um)\b/i,
+      /\bsalam\s+aleyk(?:oum|um)\b/i,
+      /\bsalam\s+alayk(?:oum|um)\b/i,
+      /\bsalam(?:a|u)?laik(?:oum|um)\b/i,
+      /\bsalam(?:a|u)?leyk(?:oum|um)\b/i,
+      /\bsalam(?:a|u)?layk(?:oum|um)\b/i
+    ],
+    response: 'Walaikum assalam, bienvenue chez AMI Voyages.\nNous sommes une agence de voyages spécialisée dans les vols en direction de l’Asie du Sud et de l’Afrique subsaharienne.\nEn quoi puis-je vous aider ?\nSi vous souhaitez connaître les tarifs, merci de nous indiquer :\nvotre destination,\nvotre ville de départ et votre ville de retour,\nvos dates de départ et de retour,\nle nombre de passagers,\nvotre préférence éventuelle : compagnie aérienne, vol direct ou prix le plus bas.\nUn agent vous indiquera le meilleur prix actuel.'
   },
 
 ].sort((a, b) => b.priority - a.priority);
@@ -135,7 +177,10 @@ function parseLeadingGreeting(text = '') {
   const normalized = normalizeText(text);
   const patterns = [
     { prefix: 'Bonjour', regex: /^(?:bonjour|salut|bjr|hi|hello|slt)\b[\s,]*(.*)$/ },
-    { prefix: 'Walaikum assalam', regex: /^(?:salam(?:\s+aleykoum|\s+alaikum)?|salamalaikoum|salamualaikoum|as\s*salamu(?:\s+aleykoum|\s+alaikum|\s+alaykum)?|assalamulaikum|asalamu\s+aleykum|asalamu\s+alaykum|slm)\b[\s,]*(.*)$/ }
+    {
+      prefix: 'Walaikum assalam',
+      regex: /^(?:slm|salam(?:\s+(?:alaik|aleyk|alayk)(?:oum|um))?|salam(?:a|u)?(?:laik|leyk|layk)(?:oum|um)|as[-\s]+salam(?:u)?\s+(?:alaik|aleyk|alayk)(?:oum|um)|assalam(?:u)?\s+(?:alaik|aleyk|alayk)(?:oum|um))\b[\s,]*(.*)$/i
+    }
   ];
   for (const { prefix, regex } of patterns) {
     const match = normalized.match(regex);
