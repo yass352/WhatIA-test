@@ -110,7 +110,23 @@ const INTENTS = [
   { name: 'duree_minimum', priority: 50, handoff: false, tests: [/\bduree\s+minimum\b/i, /\bminimum\s+de\s+jours\b/i, /\bsejour\s+minimum\b/i], response: 'En Asie, c’est généralement 5 à 7 jours.\nEn Afrique, c’est généralement 3 jours, selon la compagnie aérienne.' },
   { name: 'au_revoir', priority: 41, handoff: false, tests: [/\bau\s+revoir\b/i, /\ba\s+bientot\b/i, /\bbye\b/i, /\bbonne\s+journee\b/i, /\bbonne\s+soiree\b/i, /\ba\s+plus\b/i, /\bon\s+se\s+recontacte\b/i], response: 'Merci pour votre message. À bientôt chez AMI Voyages.' },
   { name: 'demande_humain', priority: 90, handoff: true, tests: [/\bje\s+veux\s+parler\s+a\s+un\s+agent\b/i, /\bje\s+veux\s+parler\s+a\s+un\s+conseiller\b/i, /\bje\s+veux\s+parler\s+a\s+quelqu[’']un\b/i, /\bun\s+agent\b/i, /\bun\s+conseiller\b/i, /\bhumain\b/i, /\bservice\s+client\b/i, /\bappelez[- ]?moi\b/i, /\bpouvez[- ]?vous\s+me\s+rappeler\b/i], response: 'Bien sûr. Merci de nous indiquer votre nom, votre numéro de téléphone et l’objet de votre demande. Un conseiller AMI Voyages prendra ensuite le relais.' },
-  { name: 'remerciement', priority: 42, handoff: false, tests: [/\bmerci\b/i, /\bmerci\s+beaucoup\b/i, /\bmerc[iî]e?\s+a\s+vous\b/i, /\bok\s+merci\b/i, /\bdaccord\s+merci\b/i, /\bgrand\s+merci\b/i, /\bmercii+\b/i], response: 'Avec plaisir. Je reste à votre disposition pour votre voyage.' },
+  {
+    name: 'remerciement',
+    priority: 42,
+    handoff: false,
+    tests: [
+      /\bmerci\b/i,
+      /\bmerci\s+beaucoup\b/i,
+      /\bmerc[iî]e?\s+a\s+vous\b/i,
+      /\bok\s+merci\b/i,
+      /\bdaccord\s+merci\b/i,
+      /\bgrand\s+merci\b/i,
+      /\bmercii+\b/i,
+      /\bmrc\s+bcp\b/i,
+      /\bmrc\b/i
+    ],
+    response: 'Avec plaisir. Je reste à votre disposition pour votre voyage.'
+  },
   {
     name: 'politesse_ca_va',
     priority: 41,
